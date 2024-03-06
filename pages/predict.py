@@ -1,5 +1,13 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
 
+def load_forest_pipeline():
+    joblib.load()
+
+def load_svc_model():
+    pass
 
 def predict_display():
     st.title("Data Prediction Page")
@@ -48,8 +56,6 @@ def predict_display():
             feature14 = st.number_input("Monthly Charges",min_value=0.0)
 
             feature15 = st.number_input("Total Charges",min_value=0.0)
-
-          
             feature17 = st.selectbox("Multiple Lines",(True, False))
 
             feature18 = st.selectbox("Internet Service",('DSL', "Fiber optic"))
