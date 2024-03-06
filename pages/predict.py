@@ -4,6 +4,11 @@ import numpy as np
 import joblib
 
 
+
+
+
+
+
 st.cache_resource(show_spinner="model loading")
 def load_logistic_pipeline():
     pipeline = joblib.load("models/logistic_model.joblib")
@@ -32,30 +37,47 @@ def select_model():
     return pipeline, encoder
     
 def make_prediction(pipeline, encoder):
-    Senior_citizen = st.session_state["snr citizen"]
+    SeniorCitizen = st.session_state["snr citizen"]
     Partner = st.session_state["partner"]
-    Phone_Service = st.session_state["phone service"]
-
     Dependents = st.session_state["dependents"]
-
-    Online_Security = st.session_state["online security"]
-    feature6 = st.selectbox("Online Backup",(True, False), key="online backup")
-
-    Device_Protection =st.session_state["device protection"]
-
-    Tech_Support = st.session_state["tech support"]
+    PhoneService = st.session_state["phone service"]
+    MultipleLines = st.session_state["multiplelines"]
+    InternetService = st.session_state["internet service"]
+    OnlineSecurity = st.session_state["online security"]
+    OnlineBackup = st.session_state["online backup"]
+    DeviceProtection =st.session_state["device protection"]
+    TechSupport = st.session_state["tech support"]
     StreamingTV = st.session_state["streamingtv"]
-    Streaming_Movies = st.session_state["streaming movies"]
+    StreamingMovies = st.session_state["streaming movies"]
     Contract = st.session_state["contract"]
-    Paperless_Billing = st.session_state["paperless billing"]
-    Payment_Method = st.session_state["payment method"]
-    Monthly_Charges= st.session_state["monthly charges"]
-    Total_Charges = st.session_state["total charges"]
-    Multiple_Lines = st.session_state["multiplelines"]
-    Internet_Service = st.session_state["internet service"]
-    Tenure = st.session_state["tenure"]
+    PaperlessBilling = st.session_state["paperless billing"]
+    PaymentMethod = st.session_state["payment method"]
+    MonthlyCharges= st.session_state["monthly charges"]
+    TotalCharges = st.session_state["total charges"]
+    tenure = st.session_state["tenure"]
   
-    column =[]
+  # Define columns and create DataFrame
+    columns = ["SeniorCitizen", "Partner", "Dependents",
+        "PhoneService", "MultipleLines", "InternetService",
+       "OnlineSecurity", "OnlineBackup", "DeviceProtection", "TechSupport",
+       "StreamingTV", "StreamingMovies", 'Contract', "PaperlessBilling",
+       "PaymentMethod", "MonthlyCharges", "TotalCharges","tenure"]
+
+    
+    data = [[ SeniorCitizen, Partner, Dependents,
+        PhoneService, MultipleLines, InternetService,
+       OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport,
+       StreamingTV, StreamingMovies, Contract, PaperlessBilling,
+       PaymentMethod, MonthlyCharges, TotalCharges,tenure]]
+    
+
+    #Create a Dataframe
+    df = pd.DataFrame(data, columns=columns)
+
+    
+    # Make prediction
+    predict = pipeline.predict(df)
+    # prediction = int(predict[0])
    
 
           
@@ -71,7 +93,7 @@ def predict_display():
 
     st.title('Make a Prediction')
     
-    select_model()
+    # select_model()
 
    
     # Input fields for prediction
@@ -80,6 +102,7 @@ def predict_display():
     # feature2 = st.number_input("Feature 2", min_value=0.0)
  
     with st.form('feature'):
+        pipeline, encoder = select_model()
         # split in to columns
         col1,col2 = st.columns(2)
 
@@ -123,7 +146,7 @@ def predict_display():
             feature19 = st.slider("Tenure", key="tenure")
 
         # Submit button to make prediction
-        st.form_submit_button ('Predict') 
+        st.form_submit_button ('Predict',on_click=make_prediction, kwargs=dict(pipeline = pipeline,encoder = encoder)) 
 
         # if submit_button:
         #     # Make prediction
