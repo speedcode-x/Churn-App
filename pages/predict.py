@@ -4,8 +4,8 @@ import numpy as np
 import joblib
 
 
-@st.cache_resource(show_spinner="model loading")
-def load_forest_pipeline():
+st.cache_resource(show_spinner="model loading")
+def load_logistic_pipeline():
     pipeline = joblib.load("models/logistic_model.joblib")
     return pipeline
 
@@ -13,14 +13,54 @@ def load_svc_model():
     pipeline = joblib.load("models/sgd_pipeline.joblib")
     return pipeline
 
-
+st.cache_resource
 def select_model():
     cols1, cols2 = st.columns(2)
     with cols1:
-        st.selectbox('select a model',options=["Logistic Model","SVC Model"],key="select model")
+        st.selectbox('select a model',options=["Logistic Model","SVC Model"],key="selected model")
 
     with cols2:
         pass
+
+    if st.session_state['selected model'] == "Logistic Model":
+        pipeline = load_logistic_pipeline()
+    else:
+        pipeline = load_svc_model()
+
+    encoder = joblib.load("models/encoder.joblib")
+
+    return pipeline, encoder
+    
+def make_prediction(pipeline, encoder):
+    Senior_citizen = st.session_state["snr citizen"]
+    Partner = st.session_state["partner"]
+    Phone_Service = st.session_state["phone service"]
+
+    Dependents = st.session_state["dependents"]
+
+    Online_Security = st.session_state["online security"]
+    feature6 = st.selectbox("Online Backup",(True, False), key="online backup")
+
+    Device_Protection =st.session_state["device protection"]
+
+    Tech_Support = st.session_state["tech support"]
+    StreamingTV = st.session_state["streamingtv"]
+    Streaming_Movies = st.session_state["streaming movies"]
+    Contract = st.session_state["contract"]
+    Paperless_Billing = st.session_state["paperless billing"]
+    Payment_Method = st.session_state["payment method"]
+    Monthly_Charges= st.session_state["monthly charges"]
+    Total_Charges = st.session_state["total charges"]
+    Multiple_Lines = st.session_state["multiplelines"]
+    Internet_Service = st.session_state["internet service"]
+    Tenure = st.session_state["tenure"]
+  
+    column =[]
+   
+
+          
+
+
 
 def predict_display():
     st.title("Data Prediction Page")
@@ -76,7 +116,7 @@ def predict_display():
             feature14 = st.number_input("Monthly Charges",min_value=0.0, key="monthly charges")
 
             feature15 = st.number_input("Total Charges",min_value=0.0, key="total charges")
-            feature17 = st.selectbox("Multiple Lines",(True, False))
+            feature17 = st.selectbox("Multiple Lines",(True, False), key="multiplelines")
 
             feature18 = st.selectbox("Internet Service",('DSL', "Fiber optic"),key="internet service")
 
