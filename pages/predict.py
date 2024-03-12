@@ -10,27 +10,27 @@ import joblib
 
 
 st.cache_resource(show_spinner="model loading")
-def load_logistic_pipeline():
-    pipeline = joblib.load("models/logistic_model.joblib")
+def load_knearest_neighbors_pipeline():
+    pipeline = joblib.load("saved_models/k-nearest_neighbors_model.joblib")
     return pipeline
 
-def load_svc_model():
-    pipeline = joblib.load("models/sgd_pipeline.joblib")
+def load_logistic_regression_model():
+    pipeline = joblib.load("saved_models/logistic_regression_model.joblib")
     return pipeline
 
 st.cache_resource
 def select_model():
     cols1, cols2 = st.columns(2)
     with cols1:
-        st.selectbox('select a model',options=["Logistic Model","SVC Model"],key="selected model")
+        st.selectbox('select a model',options=["K-Nearest Neighbors Model","Logistic Regression model"],key="selected model")
 
     with cols2:
         pass
 
-    if st.session_state['selected model'] == "Logistic Model":
-        pipeline = load_logistic_pipeline()
+    if st.session_state['selected model'] == "K-Nearest Neighbors Model":
+        pipeline = load_knearest_neighbors_pipeline()
     else:
-        pipeline = load_svc_model()
+        pipeline = load_logistic_regression_model()
 
     encoder = joblib.load("models/encoder.joblib")
 
